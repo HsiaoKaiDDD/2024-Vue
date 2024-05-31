@@ -7,6 +7,13 @@ export default {
       inputType: 'password',
       color: 'bg-blue-500',
       showPassword: false,
+      nextTextValue: '',
+      checkboxValue: '',
+      singleCheckboxValue: '',
+      multipleCheckboxValue: [],
+      radioValue: '',
+      fileData: null,
+      show: false,
     };
   },
   methods: {
@@ -21,6 +28,27 @@ export default {
     togglePassword() {
       // this.inputType = this.inputType === 'password' ? 'text' : 'password';
       this.showPassword = !this.showPassword; 
+    },
+    getInputValue(e) {
+      console.log(e.target.value);
+    },
+    getInputValues(e) {
+      console.log(e);
+    },
+
+    // 上傳檔案
+    uplaodFile(e) {
+      if (e.target.files.length === 0){
+        return;
+      }
+      const file = e.target.files[0];
+      console.log(file.type)
+      // 卡控 只包含圖片
+      if (file.type.includes('image/')){
+        // 生出圖片
+        const img = URL.createObjectURL(file);
+        this.fileData = img;
+      }
     },
   },
 };
@@ -49,6 +77,54 @@ export default {
     <button type="button" @click="togglePassword">顯示/關閉密碼</button>
     <input :type="showPassword ? 'text' : 'password'" class="text-black">
     <button type="button" @click="togglePassword">顯示/關閉密碼</button>
+
+    <label for="">
+      文字輸入框
+      <input type="text">
+    </label>
+    <!-- input event -->
+    <input type="text" class="text-black" @input="(e) => getInputValue(e)">
+    <!-- input change -->
+    <input type="text" class="text-black" @change="getInputValues">
+
+    <!-- v-model 雙向綁定 -->
+    <input v-model="nextTextValue" type="text" class="text-black">
+    {{ nextTextValue }}
+
+    <input v-model="singleCheckboxValue" type="checkbox" :true-value="1" :false-value="0">
+    {{ '單選:' + singleCheckboxValue }}
+    <!-- 複選勾選欄 -->
+    <input v-model="multipleCheckboxValue" type="checkbox" :value="1">
+    <input v-model="multipleCheckboxValue" type="checkbox" :value="2">
+    <input v-model="multipleCheckboxValue" type="checkbox" :value="3">
+    {{ multipleCheckboxValue.toString() }}
+    {{ multipleCheckboxValue.join('*') }}
+
+    <div class="flex flex-col gap-y-2">
+      <label>
+        男
+        <input v-model="radioValue" type="radio" value="boy">
+      </label>
+      <label>
+        女
+        <input v-model="radioValue" type="radio" value="girl">
+      </label>
+      <label>
+        其他
+        <input v-model="radioValue"  type="radio" value="other">
+      </label>
+      {{ radioValue }}
+      <img :src="fileData" alt="">
+    </div>
+
+    <input type="file" accept=".jpg, .png, .gif" multiple @change="uplaodFile">
+
+    <!-- V-SHOW -->
+    <div v-show="show">出現</div>
+
+    <!-- v-if -->
+    <div v-if="show">appear</div>
+    <div v-else>dissapear</div>
   </div>
 </template>
 
