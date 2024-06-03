@@ -3,7 +3,6 @@ export default {
   data() {
     return {
       count: '2',
-      className: 'text-4xl text-red-500',
       inputType: 'password',
       color: 'bg-blue-500',
       showPassword: false,
@@ -14,6 +13,7 @@ export default {
       radioValue: '',
       fileData: null,
       show: false,
+      className: 'bg-red-500',
     };
   },
   methods: {
@@ -125,6 +125,10 @@ export default {
     <!-- v-if -->
     <div v-if="show">appear</div>
     <div v-else>dissapear</div>
+
+    <!-- v-bind -->
+    <div class="w-[100px] h-[100px]" :class="show ? 'bg-red-500' : 'bg-blue-500'"></div>
+    <div class="w-[100px] h-[100px] bg-red-500" :class="{ 'text-yellow-500' : show ,'text-5xl' :rule === 'if' }">23</div>
   </div>
 </template>
 
