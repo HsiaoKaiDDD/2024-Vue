@@ -14,7 +14,52 @@ export default {
       fileData: null,
       show: false,
       className: 'bg-red-500',
+      arr: [1, 2, 3],
+      myObj: {
+        id: 1,
+        name: 'eric',
+      },
+      practiceObj: 
+      [
+        {
+          id: 1,
+          name: 'eric',
+          identityC: 'B12233232',
+          gender: 'man',
+          phone: '0905411895',
+        },
+        {
+          id: 2,
+          name: 'eric',
+          identityC: 'B12233232',
+          gender: 'man',
+          phone: '0905411895',
+        },
+        {
+          id: 3,
+          name: 'eric',
+          identityC: 'B12233232',
+          gender: 'women',
+          phone: '0905411895',
+        },
+        {
+          id: 4,
+          name: 'eric',
+          identityC: 'B12233232',
+          gender: 'women',
+          phone: '0905411895',
+        },
+      ],
+      selectTab: '',
     };
+  },
+  computed: {
+    filterData() {
+      if(!this.selectTab) {
+        return this.practiceObj;
+      }
+      return this.practiceObj.filter(user => user.gender === this.selectTab);
+    },
   },
   methods: {
     addCount(){
@@ -50,12 +95,35 @@ export default {
         this.fileData = img;
       }
     },
+    // 添加陣列
+    addArr() {
+      // 找出陣列最後一個
+      // 方法1
+      // const lastItem = this.arr[this.arr.length - 1];
+      // 方法2
+      const lastItem = this.arr.at(-1) ?? 0;
+      console.log(this.arr.length);
+      this.arr.push(lastItem + 1);
+    },
+    deleteArr() {
+      this.arr.splice(-1, 1);
+    },
+    // 刪除陣列
+    deleteItem(id) {
+      const targetId = id;
+      console.log(targetId)
+      this.practiceObj.splice(targetId, 1);
+    },
+    // 更換篩選
+    changeTab(target) {
+      this.selectTab = target;
+    }
   },
 };
 </script>
 
 <template>
-  <div class="flex flex-col gap-y-2">
+  <div class="flex flex-col gap-y-2 py-[50px]">
     <h1 class="text-8xl font-bold">{{ count }}</h1>
 
     <!-- v-on 事件 -->
@@ -129,6 +197,53 @@ export default {
     <!-- v-bind -->
     <div class="w-[100px] h-[100px]" :class="show ? 'bg-red-500' : 'bg-blue-500'"></div>
     <div class="w-[100px] h-[100px] bg-red-500" :class="{ 'text-yellow-500' : show ,'text-5xl' :rule === 'if' }">23</div>
+
+    <!-- v-for -->
+    <div v-for="(item, index) in arr" :key="index">
+      {{ index }} : {{ item }}
+    </div>
+
+    <!-- 練習:打印1-99 -->
+    <!-- <div v-for="(item , index) in 99" :key="index">
+      {{ item }}
+    </div> -->
+
+    <!-- 打印object -->
+    <div v-for="(value, key , index) in myObj" :key="index">
+      {{ key }} {{ value }}
+    </div>
+
+    <!-- 練習 -->
+    <button type="button" @click="addArr">新增</button>
+    <button type="button" @click="deleteArr">刪除</button>
+    {{ arr }}
+
+    <!-- 練習 -->
+    <nav>
+      <button type="button" @click="changeTab('')">不限</button>
+      <button type="button" @click="changeTab('man')">篩選男</button>
+      <button type="button" @click="changeTab('women')">篩選女</button>
+    </nav>
+    <table>
+      <tr>
+        <th>編號</th>
+        <th>姓名</th>
+        <th>身分證字號</th>
+        <th>性別</th>
+        <th>電話</th>
+        <th>功能</th>
+      </tr>
+      <tbody v-for="(value, key , index) in filterData" :key="index">
+        <td>{{ value.id }}</td>
+        <td>{{ value.name }}</td>
+        <td>{{ value.identityC }}</td>
+        <td>{{ value.gender === 'man' ? '男' : '女' }}</td>
+        <td>{{ value.phone }}</td>
+        <td>
+          <button type="button" @click="deleteItem(key)">刪除</button>
+        </td>
+      </tbody>
+    </table>
   </div>
 </template>
 
